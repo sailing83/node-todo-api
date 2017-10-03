@@ -22,8 +22,21 @@ app.post('/todos', (req, res) => {	//Add a todo task
 		res.send(doc);
 	}, (error) => {
 		res.status(400).send(error);
-	})
+	});
 });
+
+app.post('/users', (req, res) => {	//Add a user
+	var body = _.pick(req.body, ['email', 'password']);
+	var user = new User(body);
+	user.save().then((user) => {
+		//res.send(user);
+		return user.generateAuthToken();
+	}).then((token) => {
+		res.header('x-auth', token).send(user);
+	}).catch((error) => {
+		res.status(400).send(error);
+	});
+})
 
 app.get('/todos', (req, res) => {	//Get all todo tasks
 	Todo.find().then((todos) => {
