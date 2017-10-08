@@ -17,7 +17,7 @@ const users = [{
 }, {
 	_id: userTwoId,
 	email: 'jen@example.com',
-	password: 'userTwoPass'	//bad data, no tokens
+	password: 'userTwoPass'	//no auth token
 }];
 
 const todos = [{

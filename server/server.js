@@ -43,6 +43,18 @@ app.get('/users/me', authenticate, (req, res) => {
 	res.send(req.user);
 });
 
+app.post('/users/login', (req, res) => {
+	var body = _.pick(req.body, ['email', 'password']);
+
+	User.findByCredentials(body.email, body.password).then((user) => {
+		return user.generateAuthToken().then((token) => {
+			res.header('x-auth', token).send(user);
+		});
+	}).catch((error) => {
+		res.status(400).send();
+	}); 
+});
+
 app.get('/todos', (req, res) => {	//Get all todo tasks
 	Todo.find().then((todos) => {
 		res.send({
@@ -88,7 +100,7 @@ app.delete('/todos/:id', (req, res) => {	//Delete a todo task by id
 	})
 });
 
-app.patch('/todos/:id', (req, res) => {
+app.patch('/todos/:id', (req, res) => {	//Update a todo task by id
 	var id =req.params.id;
 	var body = _.pick(req.body, ['task', 'completed']);
 
